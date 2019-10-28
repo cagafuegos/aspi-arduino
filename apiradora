@@ -1,0 +1,140 @@
+#define Pecho 5
+#define Ptrig 4
+#define Pecho2 3
+#define Ptrig2 2
+
+#define ENB 10
+#define ENA 11
+#define IN2 9
+#define IN1 8
+#define IN3 6
+#define IN4 7
+
+long duracion, distancia,distancia2, duracion2,distancia1;
+
+bool control=true;
+ 
+void setup() {                
+  Serial.begin (9600);       // inicializa el puerto seria a 9600 baudios
+  pinMode(Pecho, INPUT);     // define el pin 6 como entrada (echo)
+  pinMode(Ptrig, OUTPUT);    // define el pin 7 como salida  (triger)
+  pinMode(ENB,OUTPUT);
+  pinMode(ENA,OUTPUT);
+  pinMode(IN1,OUTPUT);
+  pinMode(IN2,OUTPUT);
+  pinMode(IN3,OUTPUT);
+  pinMode(IN4,OUTPUT);
+  pinMode(Pecho2,INPUT);
+  pinMode(Ptrig2,OUTPUT);
+  medida_1();
+  }
+  
+void loop() {
+  
+  
+  medida();
+  
+ 
+  if (distancia< 400 && distancia >15)
+  {
+    adelante();
+    
+    }
+    else if(distancia<=15)
+    { 
+    giro_iz();
+    distancia2=1;
+    
+    }
+  if (distancia2>=1)
+  {
+    medida_2();
+  }
+  if(distancia1<= distancia2)    
+   {
+     giro_der();
+     distancia2=0;
+     }
+         
+  }
+  
+  void medida()
+          {
+            digitalWrite(Ptrig, LOW);
+            delayMicroseconds(2);
+            digitalWrite(Ptrig, HIGH);   // genera el pulso de triger por 10ms
+            delayMicroseconds(10);
+            digitalWrite(Ptrig, LOW);
+  
+            duracion = pulseIn(Pecho, HIGH);
+            distancia = (duracion/2) / 29;            // calcula la distancia en centimetros
+            }
+    
+    void adelante()
+    {
+      digitalWrite (IN1, LOW);
+      digitalWrite (IN2, HIGH);
+      digitalWrite (IN3, LOW);
+      digitalWrite (IN4, HIGH);
+      
+      analogWrite(ENA,100);
+      analogWrite(ENB,100);
+      }
+      
+      void atras()
+      {
+        digitalWrite (IN1, HIGH);
+        digitalWrite (IN2, LOW);
+        digitalWrite (IN3, HIGH);
+        digitalWrite (IN4, LOW);
+        
+        analogWrite(ENA,100);
+        analogWrite(ENB,100);
+        }
+        
+        void giro_der()
+        {
+          digitalWrite (IN1, LOW);
+          digitalWrite (IN2, HIGH);
+          digitalWrite (IN3, LOW);
+          digitalWrite (IN4, HIGH);
+          
+          analogWrite(ENA,100);
+          analogWrite(ENB,0);
+          delay(500);
+          }
+          void giro_iz()
+          {
+            digitalWrite (IN1, LOW);
+            digitalWrite (IN2, HIGH);
+            digitalWrite (IN3, LOW);
+            digitalWrite (IN4, HIGH);
+    
+            analogWrite(ENA,100);
+            analogWrite(ENB,0);
+            delay(500);
+            }
+          
+         void medida_1()
+          {
+            digitalWrite(Ptrig, LOW);
+            delayMicroseconds(2);
+            digitalWrite(Ptrig, HIGH);   // genera el pulso de triger por 10ms
+            delayMicroseconds(10);
+            digitalWrite(Ptrig, LOW);
+  
+            duracion = pulseIn(Pecho, HIGH);
+            distancia1 = (duracion/2) / 29;            // calcula la distancia en centimetros
+            }
+            
+    void medida_2()
+      {
+                digitalWrite(Ptrig2, LOW);
+                delayMicroseconds(2);
+                digitalWrite(Ptrig2, HIGH);   // genera el pulso de triger por 10ms
+                delayMicroseconds(10);
+                digitalWrite(Ptrig2, LOW);
+  
+                duracion2 = pulseIn(Pecho2, HIGH);
+                distancia2 = (duracion2/2) / 29;            // calcula la distancia en centimetros
+            }
